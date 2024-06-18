@@ -5,8 +5,12 @@ export default function UseStateTest() {
   const [state, setState] = useState({ bar: { count: 1 } });
 
   const increment = () => {
-    setState((state) => ({ bar: { count: state.bar.count + 1 } }));
-  };
+    setState(state => ({
+      bar: {
+        count: state.bar.count + 1
+      }
+    }));
+  }
 
   return (
     <div>
