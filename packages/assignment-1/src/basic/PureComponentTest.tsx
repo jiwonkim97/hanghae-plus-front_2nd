@@ -9,7 +9,8 @@ export default function PureComponentTest() {
   return (
     <div>
       <MemoCat crying={meowCount}/>
-      <MemoDog crying={barkedCount}/>      <button data-testid="meow" onClick={() => setMeowCount(n => n + 1)}>야옹</button>
+      <MemoDog crying={barkedCount}/>      
+      <button data-testid="meow" onClick={() => setMeowCount(n => n + 1)}>야옹</button>
       <button data-testid="bark" onClick={() => setBarkedCount(n => n + 1)}>멍멍</button>
     </div>
   );
@@ -19,5 +20,6 @@ const MemoCat = memo(({crying}:{crying: number}) => {
   return <Cat crying={crying}/>
 })
 
-const MemoDog = memo(({crying}:{crying: number}) => {  return <Dog crying={crying}/>
+const MemoDog = memo(({crying}:{crying: number}) => {  
+  return <Dog crying={crying}/>
 })
