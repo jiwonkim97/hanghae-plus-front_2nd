@@ -85,23 +85,98 @@ export class CustomNumber {
 CustomNumber.cache = {};
 
 export function createUnenumerableObject(target) {
-  Object.defineProperty(target, "propertyIsEnumerable", {
-    value: () => false,
-    writable: false
+  /**
+   * spread 연산자는 객체의 얕은 복사를 수행합니다.
+   * 얕은 복사는 객체의 최상위 속성만 복사하고, 중첩된 객체는 참조로 복사합니다.
+   * 그렇다면?? 생성자에서 새로운 객체로 만들어서 넣어줘야하나..?
+   * 
+   * 각 키에 대한 Property의 enumerable 속성을 false로 변경한다!
+   */
+  Object.keys(target).map(key => {
+    Object.defineProperty(target, key, {
+      enumerable:false
+    })
   })
-  return target;
+
+  return target
 }
 
 export function forEach(target, callback) {
+  /**
+   * createUnenumerableObject에서 enumerable을 false로 했으니 다른 방법을 찾아야 한다.
+   * 그래서 모든 프로퍼티 이름을 가져온다 -> key
+   * 배열의 경우 length라는 프로퍼티가 있다! -> 필터링 해주기
+   */
+  Object.getOwnPropertyNames(target).filter(key => key !== "length").map(_key => {
+    let value = target[_key]
+    let key = _key
 
+    /**
+     * key던 value던 숫자일 경우 Number로 만들어준다.
+     * isNaN 함수의 경우 "0", 0 모두 false를 반환하기 때문에 사용하기 적합하다고 판단
+     */
+    if(!isNaN(value)){
+      value = Number(value)
+    }
+
+    if(!isNaN(key)){
+      key = Number(key)
+    }
+
+    callback(value, key)
+  })
 }
 
 export function map(target, callback) {
+  if(Array.isArray(target)){
+    // console.log(JSON.stringify(target) + "is Array")
+    const array = Object.getOwnPropertyNames(target).filter(key => key !== "length").map(_key => {
+      return callback(target[_key])
+    })
 
+    return array
+  }else{
+    // console.log(JSON.stringify(target) + "is Not Array")
+    /**
+     * 일반 object의 경우에는 해당 속성이 빈 배열이지만
+     * span의 경우에는 [ Symbol(impl) ]이 반환됨!
+     */
+    if(Object.getOwnPropertySymbols(target).length){
+      // NodeList는 순회가 되지 않아 Array로 변환
+      const spansArray = Array.from(target)
+      return spansArray.map(span => callback(span))
+    }else{
+      const entries = Object.getOwnPropertyNames(target).map(_key => {
+        return ([_key, callback(target[_key])])
+      })
+  
+      return Object.fromEntries(entries)
+    }
+  }
 }
 
 export function filter(target, callback) {
-
+  if(Array.isArray(target)){
+    return Object.getOwnPropertyNames(target).filter(key => key !== "length").filter(_key => {
+      callback(target[_key])
+    })
+  }else{
+    /**
+     * 일반 object의 경우에는 해당 속성이 빈 배열이지만
+     * span의 경우에는 [ Symbol(impl) ]이 반환됨!
+     */
+    if(Object.getOwnPropertySymbols(target).length){
+      // NodeList는 순회가 되지 않아 Array로 변환
+      const spansArray = Array.from(target)
+      return spansArray.filter(span => callback(span))
+    }else{
+      const entries = Object.getOwnPropertyNames(target).filter(_key => {
+        callback(target[_key])
+      })
+  
+      return Object.fromEntries(entries)
+    }
+  }
 }
 
 
