@@ -157,9 +157,10 @@ export function map(target, callback) {
 
 export function filter(target, callback) {
   if(Array.isArray(target)){
-    return Object.getOwnPropertyNames(target).filter(key => key !== "length").filter(_key => {
-      callback(target[_key])
-    })
+    return Object.getOwnPropertyNames(target)
+      .filter(key => key !== "length")
+      .filter(key => callback(target[key]))
+      .map(key => target[key])
   }else{
     /**
      * 일반 object의 경우에는 해당 속성이 빈 배열이지만
@@ -170,23 +171,20 @@ export function filter(target, callback) {
       const spansArray = Array.from(target)
       return spansArray.filter(span => callback(span))
     }else{
-      const entries = Object.getOwnPropertyNames(target).filter(_key => {
-        callback(target[_key])
+      const keys = Object.getOwnPropertyNames(target).filter((_key) => {
+        return callback(target[_key])
       })
-  
-      return Object.fromEntries(entries)
+
+      return Object.fromEntries(keys.map(key => [[key], target[key]]))
     }
   }
 }
 
 
 export function every(target, callback) {
-
+  return filter(target, callback).length === target.length
 }
 
 export function some(target, callback) {
-
+  return filter(target, callback).length !== 0
 }
-
-
-
