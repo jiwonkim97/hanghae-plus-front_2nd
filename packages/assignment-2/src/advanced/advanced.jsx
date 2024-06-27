@@ -1,4 +1,4 @@
-import { createContext, useContext, useState } from "react";
+import { createContext, useCallback, useContext, useRef, useState } from "react";
 
 const cache = new Map();
 
@@ -12,11 +12,28 @@ export const memo1 = (fn) => {
   return ret;
 };
 
-export const memo2 = (fn) => fn();
+const cache2 = new Map();
+
+export const memo2 = (fn, arr) => {
+  const key = arr.toString()
+  if (cache2.has(key)) {
+    return cache2.get(key)
+  }
+  const result = fn();
+  cache2.set(key, result)
+  return result;
+};
 
 
 export const useCustomState = (initValue) => {
-  return useState(initValue);
+  const value = useRef()
+  
+  const setState = useCallback(()=> {
+    if(JSON.stringify(value.current) !== JSON.stringify(initValue)){
+      value.current = initValue
+    }
+  }, [initValue])
+  return [{value: value.current}, setState]
 }
 
 const textContextDefaultValue = {
