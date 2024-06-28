@@ -24,16 +24,16 @@ export const memo2 = (fn, arr) => {
   return result;
 };
 
-
 export const useCustomState = (initValue) => {
-  const value = useRef()
-  
-  const setState = useCallback(()=> {
-    if(JSON.stringify(value.current) !== JSON.stringify(initValue)){
-      value.current = initValue
+  const [value, _setValue] = useState(initValue)
+
+  const setState = (newValue) => {
+    if(JSON.stringify(value) !== JSON.stringify(newValue)){
+      _setValue(newValue)
     }
-  }, [initValue])
-  return [{value: value.current}, setState]
+  }
+  return [value, setState];
+  
 }
 
 const textContextDefaultValue = {
@@ -47,43 +47,42 @@ export const TestContext = createContext({
   setValue: () => null,
 });
 
+// 전체 컴포넌트에 영향을 미치는 컴포넌트는 렌더링 최소화
 export const TestContextProvider = ({ children }) => {
-  const [value, setValue] = useState(textContextDefaultValue);
+  const value = useRef(textContextDefaultValue)
+  const setValue = useCallback((newValue) => value.current = newValue, [])
+
 
   return (
-    <TestContext.Provider value={{ value, setValue }}>
+    <TestContext.Provider value={{ value: value.current, setValue }}>
       {children}
     </TestContext.Provider>
   )
 }
 
-const useTestContext = () => {
-  return useContext(TestContext);
+// 개별 컴포넌트에 렌더링을 유발해야한다!
+const useTestContext = (key) => {
+  const {value, setValue} = useContext(TestContext)
+  const [state, setState] = useState(value[key])
+  
+  const memoSetState = (newValue) => {
+    setState(newValue)
+    setValue({...value, newValue})
+  }
+
+  return [state, memoSetState];
 }
 
+// 각 키를 가지고 그들만의 상태를 가지도록 한다.
 export const useUser = () => {
-  const { value, setValue } = useTestContext();
-
-  return [
-    value.user,
-    (user) => setValue({ ...value, user })
-  ];
+  return useTestContext("user")
 }
 
 export const useCounter = () => {
-  const { value, setValue } = useTestContext();
-
-  return [
-    value.count,
-    (count) => setValue({ ...value, count })
-  ];
+  return useTestContext("count")
 }
 
 export const useTodoItems = () => {
-  const { value, setValue } = useTestContext();
 
-  return [
-    value.todoItems,
-    (todoItems) => setValue({ ...value, todoItems })
-  ];
+  return useTestContext("todoItems")
 }
