@@ -11,6 +11,7 @@ export function shallowEquals(target1, target2) {
         return false
       }
       // 배열의 값들을 순회하면서 비교 후에 결과를 반환합니다.
+      // Array.every()를 활용해볼 것
       return !target1.map((value, index) => value === target2[index]).includes(false)
     } else {
       try {
@@ -129,6 +130,8 @@ export class CustomNumber {
   }
 }
 // CustomNumber 캐시
+// CustomNumber 내부 static 필드로 선언 하면 전역 공간에 정의하지 않아도 될 듯
+// Private
 CustomNumber.cache = {};
 
 export function createUnenumerableObject(target) {
