@@ -1,5 +1,5 @@
-import { expect, describe, test, vi } from 'vitest'
-import { createHooks } from '../hooks.js'
+import { describe, expect, test, vi } from 'vitest';
+import { createHooks } from '../hooks.js';
 
 describe("hooks test", () => {
   describe("useState", () => {
