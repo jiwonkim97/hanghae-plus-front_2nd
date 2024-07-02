@@ -5,6 +5,13 @@ function MyReact() {
   let _root = null;
   let _rootComponent = null;
   let _oldComponent = null;
+
+  function resetContext() {
+    _root = null;
+    _rootComponent = null;
+    _oldComponent = null;
+    resetHookContext()
+  }
   const _render = () => {
     console.log("rerender")
     console.log(JSON.stringify(_oldComponent))
@@ -14,7 +21,7 @@ function MyReact() {
     customRender(_root, _rootComponent(), _oldComponent)
     _oldComponent = _rootComponent()
   };
-  function render($root, rootComponent) { 
+  function render($root, rootComponent) {
     console.log("render")
     console.log($root.innerHTML)
     console.log(JSON.stringify(rootComponent()))
