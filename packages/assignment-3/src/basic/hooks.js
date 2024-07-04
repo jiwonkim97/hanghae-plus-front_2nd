@@ -22,10 +22,10 @@ export function createHooks(callback) {
 
     const setState = (newState) => {
       if (!deepEquals(stateList[currentIndex], newState)) {
-        console.log("state changed!!!")
-        console.log("before: ", stateList[currentIndex])
-        console.log("after: ", newState)
-        console.log("============================")
+        // console.log("state changed!!!")
+        // console.log("before: ", stateList[currentIndex])
+        // console.log("after: ", newState)
+        // console.log("============================")
         stateList[currentIndex] = newState
         callback()
       }
