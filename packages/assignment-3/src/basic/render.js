@@ -65,12 +65,12 @@ function updateAttributes(target, newProps, oldProps) {
  * 태그에 태그를 child로 추가할 때는 appendChild()
  */
 export function render(parent, newNode, oldNode, index = 0) {
-  console.log("render.js render")
+  // console.log("render.js render")
   // 1. 만약 newNode가 없고 oldNode만 있다면
   //   parent에서 oldNode를 제거
   //   종료
   if (newNode === undefined && oldNode !== undefined) {
-    console.log("case 1")
+    // console.log("case 1")
     parent.removeChild(oldNode)
     return
   }
@@ -79,11 +79,6 @@ export function render(parent, newNode, oldNode, index = 0) {
   //   newNode를 생성하여 parent에 추가
   //   종료
   if (newNode !== undefined && oldNode === undefined) {
-    console.log("==============================")
-    console.log("case 2")
-    console.log(newNode)
-    console.log(oldNode)
-    console.log("==============================")
     const child = createElement(newNode)
     parent.appendChild(child)
     return
@@ -93,7 +88,7 @@ export function render(parent, newNode, oldNode, index = 0) {
   //   oldNode를 newNode로 교체
   //   종료
   if (isString(newNode) && isString(oldNode) && newNode !== oldNode) {
-    console.log("case 3")
+    // console.log("case 3")
     parent.replaceChildren(newNode)
     return
   }
@@ -102,12 +97,12 @@ export function render(parent, newNode, oldNode, index = 0) {
   //   oldNode를 newNode로 교체
   //   종료
   if (typeof newNode !== typeof oldNode) {
-    console.log("case 4")
+    // console.log("case 4")
     parent.replaceChildren(newNode)
     return
   }
 
-  console.log("case else")
+  // console.log("case else")
   // 5. newNode와 oldNode에 대해 updateAttributes 실행
   updateAttributes(parent.firstChild, newNode?.props, oldNode?.props)
 
@@ -122,18 +117,18 @@ export function render(parent, newNode, oldNode, index = 0) {
   }
 }
 
-const isString = (target) => {
+export const isString = (target) => {
   return typeof target === "string"
 }
 
-const isUndefined = (target) => {
+export const isUndefined = (target) => {
   return target === undefined
 }
 
-const isNull = (target) => {
+export const isNull = (target) => {
   return target === null
 }
 
-const isNill = (target) => {
+export const isNill = (target) => {
   return isUndefined(target) || isNull(target)
 }

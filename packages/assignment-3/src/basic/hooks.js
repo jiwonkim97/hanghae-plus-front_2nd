@@ -14,7 +14,6 @@ export function createHooks(callback) {
   let stateList = [];
   let pState = -1;
   const useState = (initState) => {
-    // 중복이 되지 않을 uuid가 필요함
     stateList.push(initState);
     pState += 1;
     const currentIndex = pState;
