@@ -5,7 +5,7 @@ function main() {
     { id: 'p3', name: '상품3', price: 30000 }
   ];
 
-  var cartWrapper = document.getElementById('app');
+  var root = document.getElementById('app');
   var cartContainer = document.createElement('div');
   var cart = document.createElement('div');
   var cartTitle = document.createElement('h1');
@@ -14,19 +14,49 @@ function main() {
   var productSelect = document.createElement('select');
   var addButton = document.createElement('button');
 
-  cartItems.id = 'cart-items';
-  cartTotal.id = 'cart-total';
-  productSelect.id = 'product-select';
-  addButton.id = 'add-to-cart';
-  cartContainer.className = 'bg-gray-100 p-8';
-  cart.className = 'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8';
-  cartTitle.className = 'text-2xl font-bold mb-4';
-  cartTotal.className = 'text-xl font-bold my-4';
-  productSelect.className = 'border rounded p-2 mr-2';
-  addButton.className = 'bg-blue-500 text-white px-4 py-2 rounded';
-  cartTitle.textContent = '장바구니';
-  addButton.textContent = '추가';
+  /**
+   * Init root
+   */
+  root.appendChild(cartContainer);
 
+  /**
+   * Init cartContainer
+   */
+  cartContainer.className = 'bg-gray-100 p-8';
+  cartContainer.appendChild(cart);
+
+  /**
+   * Init cart
+   */
+  cart.className = 'max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl p-8';
+  cart.appendChild(cartTitle);
+  cart.appendChild(cartItems);
+  cart.appendChild(cartTotal);
+  cart.appendChild(productSelect);
+  cart.appendChild(addButton);
+
+  /**
+   * Init cartTitle
+   */
+  cartTitle.className = 'text-2xl font-bold mb-4';
+  cartTitle.textContent = '장바구니';
+
+  /**
+   * Init cartItems
+   */
+  cartItems.id = 'cart-items';
+
+  /**
+   * Init cartTotal
+   */
+  cartTotal.id = 'cart-total';
+  cartTotal.className = 'text-xl font-bold my-4';
+
+  /**
+   * Init productSelect
+   */
+  productSelect.id = 'product-select';
+  productSelect.className = 'border rounded p-2 mr-2';
   for (var i = 0; i < productList.length; i++) {
     var option = document.createElement('option');
     option.value = productList[i].id;
@@ -34,14 +64,12 @@ function main() {
     productSelect.appendChild(option);
   }
 
-  cart.appendChild(cartTitle);
-  cart.appendChild(cartItems);
-  cart.appendChild(cartTotal);
-  cart.appendChild(productSelect);
-  cart.appendChild(addButton);
-  cartContainer.appendChild(cart);
-  cartWrapper.appendChild(cartContainer);
-
+  /**
+   * Init addButton
+   */
+  addButton.id = 'add-to-cart';
+  addButton.className = 'bg-blue-500 text-white px-4 py-2 rounded';
+  addButton.textContent = '추가';
 
   function updateCart() {
     var finalPrice = 0;
@@ -112,12 +140,12 @@ function main() {
         var productContainer = document.createElement('div');
         var productDetail = document.createElement('span');
         var buttonsContainer = document.createElement('div');
-        var minusButton = document.createElement('button');
+        var minusButton =document.createElement('button');
         var plusButton = document.createElement('button');
         var removeButton = document.createElement('button');
 
         productContainer.id = selectedProduct.id;
-        productContainer.className = 'flex justify-between items-center mb-2';
+        productContainer.className ='flex justify-between items-center mb-2';
         productDetail.textContent = selectedProduct.name + ' - ' + selectedProduct.price + '원 x 1';
 
         minusButton.className = 'quantity-change bg-blue-500 text-white px-2 py-1 rounded mr-1';
