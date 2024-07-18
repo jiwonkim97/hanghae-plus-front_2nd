@@ -1,9 +1,11 @@
 import { useState } from "react";
 import { describe, expect, test } from 'vitest';
-import { act, fireEvent, render, screen, within } from '@testing-library/react';
+import { act, fireEvent, render, renderHook, screen, within } from '@testing-library/react';
 import { CartPage } from '../../refactoring/components/CartPage';
 import { AdminPage } from "../../refactoring/components/AdminPage";
 import { Coupon, Product } from '../../types';
+import { _calculateCouponDiscount } from "../../refactoring/hooks/utils/cartUtils";
+import { useAdmin } from "../../refactoring/hooks/useAdmin";
 
 const mockProducts: Product[] = [
   {
@@ -233,11 +235,81 @@ describe('advanced > ', () => {
 
   describe('자유롭게 작성해보세요.', () => {
     test('새로운 유틸 함수를 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
-      expect(true).toBe(false);
+      const testCoupon1 = null
+      const testCoupon2: Coupon = {code: "TEST1", discountType: "amount", discountValue: 5000, name: "TEST_AMOUNT_COUPON"}
+      const testCoupon3: Coupon = {code: "TEST2", discountType: "percentage", discountValue: 50, name: "TEST_PERCENTAGE_COUPON"}
+      expect(_calculateCouponDiscount(10000, testCoupon1)).toBe(0);
+      expect(_calculateCouponDiscount(10000, testCoupon2)).toBe(5000);
+      expect(_calculateCouponDiscount(10000, testCoupon3)).toBe(5000);
     })
 
     test('새로운 hook 함수르 만든 후에 테스트 코드를 작성해서 실행해보세요', () => {
-      expect(true).toBe(false);
+      const { result } = renderHook(() => useAdmin());
+
+      // newCoupon update 기능 테스트
+      expect((result.current.newCoupon)).toEqual({
+        name: '',
+        code: '',
+        discountType: 'percentage',
+        discountValue: 0
+      })
+
+      act(() => {
+        result.current.updateNewCoupon({ ...result.current.newCoupon, name: "TEST_COUPON" })
+      });
+      
+      expect((result.current.newCoupon)).toEqual({
+        name: 'TEST_COUPON',
+        code: '',
+        discountType: 'percentage',
+        discountValue: 0
+      })
+
+      act(() => {
+        result.current.updateNewCoupon({ ...result.current.newCoupon, code: "1234" })
+      });
+      
+      expect((result.current.newCoupon)).toEqual({
+        name: 'TEST_COUPON',
+        code: '1234',
+        discountType: 'percentage',
+        discountValue: 0
+      })
+
+      act(() => {
+        result.current.updateNewCoupon({ ...result.current.newCoupon, discountType: "amount" })
+      });
+      
+      expect((result.current.newCoupon)).toEqual({
+        name: 'TEST_COUPON',
+        code: '1234',
+        discountType: 'amount',
+        discountValue: 0
+      })
+
+      act(() => {
+        result.current.updateNewCoupon({ ...result.current.newCoupon, discountValue: 5000 })
+      });
+      
+      expect((result.current.newCoupon)).toEqual({
+        name: 'TEST_COUPON',
+        code: '1234',
+        discountType: 'amount',
+        discountValue: 5000
+      })
+      
+      // newCoupon add 시 newCoupon 초기화 테스트
+      act(() => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        result.current.addCoupon((_newCoupon: Coupon) => {})
+      });
+      
+      expect((result.current.newCoupon)).toEqual({
+        name: '',
+        code: '',
+        discountType: 'percentage',
+        discountValue: 0
+      })
     })
   })
 })
