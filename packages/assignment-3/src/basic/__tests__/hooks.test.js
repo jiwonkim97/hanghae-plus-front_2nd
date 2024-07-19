@@ -1,5 +1,5 @@
-import { expect, describe, test, vi } from 'vitest'
-import { createHooks } from '../hooks.js'
+import { describe, expect, test, vi } from 'vitest';
+import { createHooks } from '../hooks.js';
 
 describe("hooks test", () => {
   describe("useState", () => {
@@ -77,6 +77,34 @@ describe("hooks test", () => {
 
       expect(render).toBeCalledTimes(3);
     });
+
+    test("동일한 initState를 가진 여러개의 state를 선언해도 각각 다른 상태를 갖는다.", () => {
+
+      let result = "";
+      const render = vi.fn(() => {
+        const [a, setA] = useState("a")
+        const [b, setB] = useState("a")
+
+        result = `a: ${a}, b: ${b}`;
+
+        return { setA, setB }
+      })
+      const { useState, resetContext } = createHooks(render);
+
+      const { setA, setB } = render();
+
+      expect(result).toBe(`a: a, b: a`)
+
+      resetContext();
+      setB("b");
+      expect(result).toBe(`a: a, b: b`)
+
+      resetContext();
+      setA("c")
+      expect(result).toBe(`a: c, b: b`)
+
+      expect(render).toBeCalledTimes(3);
+    })
   });
 
   describe("useMemo", () => {

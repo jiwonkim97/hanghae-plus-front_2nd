@@ -1,6 +1,6 @@
-import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { act, fireEvent, render } from "@testing-library/react";
 import { useState } from "react";
+import { beforeEach, describe, expect, test, vi } from 'vitest';
 import { useMyRef } from "../useMyRef.ts";
 
 beforeEach(() => {
