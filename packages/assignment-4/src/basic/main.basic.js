@@ -1,4 +1,4 @@
-// 상수 정의 (윤석의 코드 스타일)
+
 const PRODUCTS = [
   { id: "p1", name: "상품1", price: 10000 },
   { id: "p2", name: "상품2", price: 20000 },
@@ -32,7 +32,7 @@ const CLASSES = {
   DISCOUNT_SPAN: "text-green-500 ml-2",
 };
 
-// 유틸리티 함수 (수빈의 코드 스타일)
+
 const createElement = (tag, attributes = {}, children = []) => {
   const element = document.createElement(tag);
   Object.entries(attributes).forEach(([key, value]) => {
@@ -57,9 +57,8 @@ const createElement = (tag, attributes = {}, children = []) => {
 const getQuantity = (element) =>
   parseInt(element.querySelector("span").textContent.split("x ")[1]);
 
-// 메인 함수들 (윤석과 수빈의 코드 스타일 결합)
 const createAppElements = () => {
-  const fragment = document.createDocumentFragment(); // 수빈의 코드: fragment 사용
+  const fragment = document.createDocumentFragment(); 
   const wrapper = createElement("div", { className: CLASSES.WRAPPER });
   const container = createElement("div", { className: CLASSES.CONTAINER });
   const title = createElement("h1", {
@@ -89,9 +88,10 @@ const createAppElements = () => {
 
   container.append(title, cartItems, cartTotal, productSelect, addButton);
   wrapper.appendChild(container);
-  fragment.appendChild(wrapper); // 수빈의 코드: fragment에 추가
 
-  document.getElementById("app").appendChild(fragment); // 수빈의 코드: fragment를 DOM에 추가
+  fragment.appendChild(wrapper); 
+
+  document.getElementById("app").appendChild(fragment); 
 
   return { cartItems, cartTotal, productSelect, addButton };
 };
@@ -166,7 +166,6 @@ const createCartItem = (product) => {
   );
 };
 
-// 메인 함수 (지원의 코드 구조와 유사)
 function main() {
   const { cartItems, productSelect, addButton } = createAppElements();
 
