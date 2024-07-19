@@ -1,6 +1,6 @@
-import { describe, expect, it, vi } from "vitest";
-import { memo1, memo2, TestContextProvider, useCounter, useCustomState, useTodoItems, useUser } from "../advanced";
 import { act, fireEvent, render } from "@testing-library/react";
+import { describe, expect, it, vi } from "vitest";
+import { TestContextProvider, memo1, memo2, useCounter, useCustomState, useTodoItems, useUser } from "../advanced";
 
 let a;
 let b;
