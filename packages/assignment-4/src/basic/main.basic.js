@@ -1,4 +1,3 @@
-
 const PRODUCTS = [
   { id: "p1", name: "상품1", price: 10000 },
   { id: "p2", name: "상품2", price: 20000 },
@@ -88,7 +87,6 @@ const createAppElements = () => {
 
   container.append(title, cartItems, cartTotal, productSelect, addButton);
   wrapper.appendChild(container);
-
   fragment.appendChild(wrapper); 
 
   document.getElementById("app").appendChild(fragment); 
@@ -167,47 +165,7 @@ const createCartItem = (product) => {
 };
 
 function main() {
-  const { cartItems, productSelect, addButton } = createAppElements();
 
-  addButton.onclick = () => {
-    const selectedProduct = PRODUCTS.find((p) => p.id === productSelect.value);
-    if (selectedProduct) {
-      let existingItem = document.getElementById(selectedProduct.id);
-      if (existingItem) {
-        const quantitySpan = existingItem.querySelector("span");
-        const quantity = getQuantity(existingItem) + 1;
-        quantitySpan.textContent = `${selectedProduct.name} - ${selectedProduct.price}원 x ${quantity}`;
-      } else {
-        cartItems.appendChild(createCartItem(selectedProduct));
-      }
-      updateCart();
-    }
-  };
-
-  cartItems.onclick = (event) => {
-    const target = event.target;
-    if (
-      target.classList.contains("quantity-change") ||
-      target.classList.contains("remove-item")
-    ) {
-      const productId = target.dataset.productId;
-      const item = document.getElementById(productId);
-      if (target.classList.contains("quantity-change")) {
-        const change = parseInt(target.dataset.change);
-        const quantitySpan = item.querySelector("span");
-        const quantity = getQuantity(item) + change;
-        if (quantity > 0) {
-          quantitySpan.textContent =
-            quantitySpan.textContent.split("x ")[0] + `x ${quantity}`;
-        } else {
-          item.remove();
-        }
-      } else if (target.classList.contains("remove-item")) {
-        item.remove();
-      }
-      updateCart();
-    }
-  };
 }
 
 main();

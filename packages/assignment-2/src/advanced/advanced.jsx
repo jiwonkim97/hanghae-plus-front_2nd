@@ -1,39 +1,12 @@
-import { createContext, useCallback, useContext, useRef, useState } from "react";
+import { createContext, useContext, useState } from "react";
 
-const cache = new Map();
+export const memo1 = (fn) => fn();
 
-export const memo1 = (fn) => {
-  if (cache.has(fn)) {
-    return cache.get(fn)
-  };
-  const ret = fn()
-  cache.set(fn, ret);
+export const memo2 = (fn) => fn();
 
-  return ret;
-};
-
-const cache2 = new Map();
-
-export const memo2 = (fn, arr) => {
-  const key = arr.toString()
-  if (cache2.has(key)) {
-    return cache2.get(key)
-  }
-  const result = fn();
-  cache2.set(key, result)
-  return result;
-};
 
 export const useCustomState = (initValue) => {
-  const [value, _setValue] = useState(initValue)
-
-  const setState = (newValue) => {
-    if(JSON.stringify(value) !== JSON.stringify(newValue)){
-      _setValue(newValue)
-    }
-  }
-  return [value, setState];
-  
+  return useState(initValue);
 }
 
 const textContextDefaultValue = {
@@ -47,42 +20,43 @@ export const TestContext = createContext({
   setValue: () => null,
 });
 
-// 전체 컴포넌트에 영향을 미치는 컴포넌트는 렌더링 최소화
 export const TestContextProvider = ({ children }) => {
-  const value = useRef(textContextDefaultValue)
-  const setValue = useCallback((newValue) => value.current = newValue, [])
-
+  const [value, setValue] = useState(textContextDefaultValue);
 
   return (
-    <TestContext.Provider value={{ value: value.current, setValue }}>
+    <TestContext.Provider value={{ value, setValue }}>
       {children}
     </TestContext.Provider>
   )
 }
 
-// 개별 컴포넌트에 렌더링을 유발해야한다!
-const useTestContext = (key) => {
-  const {value, setValue} = useContext(TestContext)
-  const [state, setState] = useState(value[key])
-  
-  const memoSetState = (newValue) => {
-    setState(newValue)
-    setValue({...value, newValue})
-  }
-
-  return [state, memoSetState];
+const useTestContext = () => {
+  return useContext(TestContext);
 }
 
-// 각 키를 가지고 그들만의 상태를 가지도록 한다.
 export const useUser = () => {
-  return useTestContext("user")
+  const { value, setValue } = useTestContext();
+
+  return [
+    value.user,
+    (user) => setValue({ ...value, user })
+  ];
 }
 
 export const useCounter = () => {
-  return useTestContext("count")
+  const { value, setValue } = useTestContext();
+
+  return [
+    value.count,
+    (count) => setValue({ ...value, count })
+  ];
 }
 
 export const useTodoItems = () => {
+  const { value, setValue } = useTestContext();
 
-  return useTestContext("todoItems")
+  return [
+    value.todoItems,
+    (todoItems) => setValue({ ...value, todoItems })
+  ];
 }

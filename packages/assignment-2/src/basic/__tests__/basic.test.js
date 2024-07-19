@@ -1,5 +1,5 @@
-import { beforeEach, describe, expect, it } from "vitest";
-import { CustomNumber, createNumber1, createNumber2, createNumber3, createUnenumerableObject, deepEquals, every, filter, forEach, map, shallowEquals, some, } from "../basic";
+import { describe, expect, it, beforeEach } from "vitest";
+import { createNumber1, createNumber2, createNumber3, CustomNumber, deepEquals, shallowEquals, forEach, map, filter, some, every, createUnenumerableObject, } from "../basic";
 
 describe('assignment 2 > basic : 값을 다루기', () => {
   describe('객체를 다뤄봅시다.', () => {
