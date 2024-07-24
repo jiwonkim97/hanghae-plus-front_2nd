@@ -57,7 +57,7 @@ jobs:
 
       - name: job2 구현
         run: |
-          pnpm -F assignment-6 lint
+          pnpm -F assignment-6 lint 2>&1 | tee error_log.txt
 
       - name: capture error message
         if: failure()
