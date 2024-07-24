@@ -72,7 +72,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "### ESLint Results\n---\nmessage: ${error_message}"
+              body: "### ESLint Results\n---\nmessage: ${errorMessage}"
             })
 
   test:
