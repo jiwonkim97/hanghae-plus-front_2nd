@@ -28,11 +28,16 @@ jobs:
 
       - name: Handle failure
         if: ${{ failure() }}
-        run: |
-          echo "Handling failure because the previous step failed"
-          curl -s -H "Authorization: token ${{ secrets.GITHUB_TOKEN }}" -X POST -d "{\"body\":\"The build has failed! Please check the logs.\"}" \
-          "https://api.github.com/repos/${{ github.repository }}/issues/${{ github.event.pull_request.number }}/comments"
-          exit -1
+        uses: actions/github-script@v5
+        with: 
+          github-token: ${{secrets.GITHUB_TOKEN}}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: '🚀'
+            })
 
   lint:
     runs-on: ubuntu-latest
