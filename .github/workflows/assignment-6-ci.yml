@@ -61,7 +61,7 @@ jobs:
 
       - name: capture error message
         if: failure()
-        run: echo "error_message=$(cat $GITHUB_WORKSPACE/_temp/error_message.txt)" >> $GITHUB_ENV
+        run: echo "error_message=$(tail -n 10 $GITHUB_WORKSPACE/_temp/_runner_file_commands/echo_error_message.txt)" >> $GITHUB_ENV
 
       - name: Handle failure
         if: failure()
@@ -73,7 +73,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "### ESLint Results\n---\n${{ env.error_message }}"
+              body: "### ESLint Results\n---\nmessage: ${{ env.error_message }}"
             })
 
   test:
