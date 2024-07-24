@@ -20,6 +20,7 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
+
       - name: job1 구현
         id: job_1
         run: |
@@ -30,7 +31,7 @@ jobs:
         if: ${{ failure() }}
         uses: actions/github-script@v6
         with: 
-          github-token: ${{secrets.TOKEN_FOR_CI }}
+          github-token: ${{secrets.GITHUB_TOKEN }}
           script: |
             github.rest.issues.createComment({
               issue_number: context.issue.number,
