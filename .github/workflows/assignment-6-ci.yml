@@ -100,7 +100,7 @@ jobs:
 
       - name: job3 구현
         run: |
-          pnpm -F assignment-6 test
+          pnpm -F assignment-6 test:coverage
         
       - name: Handle failure
         if: failure()
