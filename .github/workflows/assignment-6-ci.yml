@@ -108,48 +108,23 @@ jobs:
           github-token: ${{ secrets.TOKEN_FOR_CI }}
           script: |
             const fs = require('fs');
-            const path = require('path');
 
             // 커버리지 리포트 읽기
-            const coverageData = JSON.parse(fs.readFileSync(test.json, 'utf8'));
+            const coverageData = JSON.parse(fs.readFileSync('packages/assignment-6/coverage/coverage-summary.json', 'utf8'));
 
-            let totalLines = 0;
-            let coveredLines = 0;
-            let totalBranches = 0;
-            let coveredBranches = 0;
-            let totalFunctions = 0;
-            let coveredFunctions = 0;
-            let totalStatements = 0;
-            let coveredStatements = 0;
+            // All files 섹션에서 전체 커버리지 값 추출
+            const allFilesCoverage = coverageData.total;
 
-            // 전체 파일에 대한 커버리지 데이터 계산
-            for (const file in coverageData) {
-              const fileCoverage = coverageData[file];
-
-              totalLines += fileCoverage.lines.total;
-              coveredLines += fileCoverage.lines.covered;
-              
-              totalBranches += fileCoverage.branches.total;
-              coveredBranches += fileCoverage.branches.covered;
-              
-              totalFunctions += fileCoverage.functions.total;
-              coveredFunctions += fileCoverage.functions.covered;
-              
-              totalStatements += fileCoverage.statements.total;
-              coveredStatements += fileCoverage.statements.covered;
-            }
-
-            // 커버리지 퍼센트 계산
-            const lineCoverage = (coveredLines / totalLines) * 100;
-            const branchCoverage = (coveredBranches / totalBranches) * 100;
-            const functionCoverage = (coveredFunctions / totalFunctions) * 100;
-            const statementCoverage = (coveredStatements / totalStatements) * 100;
+            const lineCoverage = allFilesCoverage.lines.pct;
+            const branchCoverage = allFilesCoverage.branches.pct;
+            const functionCoverage = allFilesCoverage.functions.pct;
+            const statementCoverage = allFilesCoverage.statements.pct;
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### 테스트 성공✅ \n---\n- 라인 커버리지: ${lineCoverage}%\n- 브랜치 커버리지: ${branchCoverage}%\n- 함수 커버리지: ${functionCoverage}%\n- 구문 커버리지: ${statementCoverage}%`
+              body: `### 테스트 성공✅ \n---\n- 라인 커버리지: ${lineCoverage.toFixed(2)}%\n- 브랜치 커버리지: ${branchCoverage.toFixed(2)}%\n- 함수 커버리지: ${functionCoverage.toFixed(2)}%\n- 구문 커버리지: ${statementCoverage.toFixed(2)}%`
             })
 
   lighthouse:
