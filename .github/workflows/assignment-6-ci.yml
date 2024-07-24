@@ -100,7 +100,7 @@ jobs:
 
       - name: job3 구현
         run: |
-          pnpm -F assignment-6 test:coverage
+          pnpm -F assignment-6 test:coverage 2>&1 | tee test.json
         
       - name: callback
         uses: actions/github-script@v6
@@ -111,7 +111,7 @@ jobs:
             const path = require('path');
 
             // 커버리지 리포트 읽기
-            const coverageData = JSON.parse(fs.readFileSync(coverage-final.json, 'utf8'));
+            const coverageData = JSON.parse(fs.readFileSync(test.json, 'utf8'));
 
             let totalLines = 0;
             let coveredLines = 0;
