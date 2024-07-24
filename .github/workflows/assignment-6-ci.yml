@@ -21,9 +21,14 @@ jobs:
           node-version: 20
           cache: 'pnpm'
       - name: job1 구현
+        id: job_1
         run: |
           pnpm install
           pnpm -F build
+
+      - name: Handle failure
+        if: ${{ steps.job_1.outcome == 'failure' }}
+        run: echo "Handling failure because the previous step failed"
 
   lint:
     runs-on: ubuntu-latest
