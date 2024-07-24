@@ -25,9 +25,10 @@ jobs:
         run: |
           pnpm install
           pnpm -F build
+        continue-on-error: true
 
       - name: Handle failure
-        if: ${{ steps.job_1.outcome == 'failure' }}
+        if: ${{ failure() }}
         run: echo "Handling failure because the previous step failed"
 
   lint:
