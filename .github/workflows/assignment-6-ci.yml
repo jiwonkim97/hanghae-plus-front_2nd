@@ -23,7 +23,7 @@ jobs:
       - name: job1 구현
         id: job_1
         run: |
-          pnpm install
+          pnpm -F assignment-6 install
           pnpm -F assignment-6 build
 
       - name: Handle failure
