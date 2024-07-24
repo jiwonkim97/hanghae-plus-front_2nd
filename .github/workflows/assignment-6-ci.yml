@@ -25,7 +25,6 @@ jobs:
         run: |
           pnpm install
           pnpm -F assignment-6 build
-        continue-on-error: true
 
       - name: Handle failure
         if: ${{ failure() }}
