@@ -102,8 +102,7 @@ jobs:
         run: |
           pnpm -F assignment-6 test:coverage
         
-      - name: Handle failure
-        if: failure()
+      - name: callback
         uses: actions/github-script@v6
         with: 
           github-token: ${{ secrets.TOKEN_FOR_CI }}
