@@ -61,7 +61,7 @@ jobs:
 
       - name: capture error message
         if: failure()
-        run: echo "error_message=$(tail -n 10 $GITHUB_WORKSPACE/_temp/_runner_file_commands/echo_error_message.txt)" >> $GITHUB_ENV
+        run: cat error_log.txt
 
       - name: Handle failure
         if: failure()
@@ -69,11 +69,13 @@ jobs:
         with: 
           github-token: ${{ secrets.TOKEN_FOR_CI }}
           script: |
+            const fs = require('fs');
+            const errorMessage = fs.readFileSync('error_log.txt', 'utf8');
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: "### ESLint Results\n---\nmessage: ${{ env.error_message }}"
+              body: "### ESLint Results\n---\nmessage: ${error_message}"
             })
 
   test:
