@@ -110,11 +110,8 @@ jobs:
             const fs = require('fs');
             const path = require('path');
 
-            // JSON 커버리지 리포트 파일 경로
-            const coverageFile = path.join(__dirname, 'coverage', 'coverage-final.json');
-
             // 커버리지 리포트 읽기
-            const coverageData = JSON.parse(fs.readFileSync(coverageFile, 'utf8'));
+            const coverageData = JSON.parse(fs.readFileSync(./coverage/coverage-final.json, 'utf8'));
 
             let totalLines = 0;
             let coveredLines = 0;
