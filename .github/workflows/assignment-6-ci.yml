@@ -59,6 +59,7 @@ jobs:
         run: |
           pnpm -F assignment-6 install
           pnpm -F assignment-6 lint 2>&1 | tee error_log.txt
+          exit ${PIPESTATUS[0]}
 
       - name: Handle failure
         if: failure()
