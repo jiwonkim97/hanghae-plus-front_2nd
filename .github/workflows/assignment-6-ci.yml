@@ -124,7 +124,7 @@ jobs:
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### 테스트 성공✅ \n---\n- 라인 커버리지: ${lineCoverage.toFixed(2)}%\n- 브랜치 커버리지: ${branchCoverage.toFixed(2)}%\n- 함수 커버리지: ${functionCoverage.toFixed(2)}%\n- 구문 커버리지: ${statementCoverage.toFixed(2)}%`
+              body: `### 테스트 성공✅ \n---\n####커버리지 결과\n- 라인 커버리지: ${lineCoverage.toFixed(2)}%\n- 브랜치 커버리지: ${branchCoverage.toFixed(2)}%\n- 함수 커버리지: ${functionCoverage.toFixed(2)}%\n- 구문 커버리지: ${statementCoverage.toFixed(2)}%`
             })
 
   lighthouse:
