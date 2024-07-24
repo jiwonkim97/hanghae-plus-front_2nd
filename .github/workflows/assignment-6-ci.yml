@@ -47,7 +47,25 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: job2 구현
-        run: echo "job2의 내용을 구현해주세요"
+        run: |
+          pnpm -F assignment-6 lint
+
+      - name: capture error message
+        if: failure()
+        run: echo "error_message=$(cat $GITHUB_WORKSPACE/_temp/error_message.txt)" >> $GITHUB_ENV
+
+      - name: Handle failure
+        if: failure()
+        uses: actions/github-script@v6
+        with: 
+          github-token: ${{ secrets.TOKEN_FOR_CI }}
+          script: |
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: "### ESLint Results\n---\n${{ env.error_message }}"
+            })
 
   test:
     runs-on: ubuntu-latest
