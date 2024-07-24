@@ -108,11 +108,52 @@ jobs:
         with: 
           github-token: ${{ secrets.TOKEN_FOR_CI }}
           script: |
+            const fs = require('fs');
+            const path = require('path');
+
+            // JSON 커버리지 리포트 파일 경로
+            const coverageFile = path.join(__dirname, 'coverage', 'coverage-final.json');
+
+            // 커버리지 리포트 읽기
+            const coverageData = JSON.parse(fs.readFileSync(coverageFile, 'utf8'));
+
+            let totalLines = 0;
+            let coveredLines = 0;
+            let totalBranches = 0;
+            let coveredBranches = 0;
+            let totalFunctions = 0;
+            let coveredFunctions = 0;
+            let totalStatements = 0;
+            let coveredStatements = 0;
+
+            // 전체 파일에 대한 커버리지 데이터 계산
+            for (const file in coverageData) {
+              const fileCoverage = coverageData[file];
+
+              totalLines += fileCoverage.lines.total;
+              coveredLines += fileCoverage.lines.covered;
+              
+              totalBranches += fileCoverage.branches.total;
+              coveredBranches += fileCoverage.branches.covered;
+              
+              totalFunctions += fileCoverage.functions.total;
+              coveredFunctions += fileCoverage.functions.covered;
+              
+              totalStatements += fileCoverage.statements.total;
+              coveredStatements += fileCoverage.statements.covered;
+            }
+
+            // 커버리지 퍼센트 계산
+            const lineCoverage = (coveredLines / totalLines) * 100;
+            const branchCoverage = (coveredBranches / totalBranches) * 100;
+            const functionCoverage = (coveredFunctions / totalFunctions) * 100;
+            const statementCoverage = (coveredStatements / totalStatements) * 100;
+
             github.rest.issues.createComment({
               issue_number: context.issue.number,
               owner: context.repo.owner,
               repo: context.repo.repo,
-              body: `### 테스트 성공✅ \n---\ntest`
+              body: `### 테스트 성공✅ \n---\n- 라인 커버리지: ${lineCoverage}%\n- 브랜치 커버리지: ${branchCoverage}%\n- 함수 커버리지: ${functionCoverage}%\n- 구문 커버리지: ${statementCoverage}%`
             })
 
   lighthouse:
