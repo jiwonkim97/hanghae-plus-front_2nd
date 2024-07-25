@@ -148,7 +148,7 @@ jobs:
           LHCI_GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         run: |
           pnpm -F assignment-6 lhci
-          
+
       - name: check reports file
         run: |
           pwd
@@ -164,6 +164,7 @@ jobs:
             const fs = require('fs');
             const results = JSON.parse(fs.readFileSync("packages/assignment-6/lhci_reports/manifest.json"));
             let comments = "";
+            let [performance, accessibility, bestPractices, seo] = [0, 0, 0, 0, 0]
 
             results.forEach((result,index) => {
               const { summary } = result;
@@ -174,22 +175,26 @@ jobs:
                 (key) => (summary[key] = formatResult(summary[key]))
               );
 
-              const score = (res) => (res >= 90 ? "🟢" : res >= 70 ? "🟠" : "🔴");
-
-              const comment = [
-                `⚡️ Lighthouse report ${index}`,
-                `| Category | Score |`,
-                `| --- | --- |`,
-                `| ${score(summary.performance)} Performance | ${summary.performance} |`,
-                `| ${score(summary.accessibility)} Accessibility | ${summary.accessibility} |`,
-                `| ${score(summary['best-practices'])} Best practices | ${summary['best-practices']} |`,
-                `| ${score(summary.seo)} SEO | ${summary.seo} |`,
-                `| ${score(summary.pwa)} PWA | ${summary.pwa} |`,
-                `\n`,
-              ].join("\n");
-
+              performance += summary.performance
+              accessibility += summary.accessibility
+              bestPractices += summary['best-practices']
+              seo += summary.seo
+              
               comments += comment + "\n";
             });
+
+            const score = (res) => (res >= 90 ? "🟢" : res >= 70 ? "🟠" : "🔴");
+            const comment = [
+                `### ⚡️ Lighthouse 성능 측정 결과`,
+                `---`,
+                `| 카테고리 | 점수 |`,
+                `| --- | --- |`,
+                `| ${score(performance)} Performance | ${performance}% |`,
+                `| ${score(accessibility} Accessibility | ${accessibility}% |`,
+                `| ${score(bestPractices)} Best practices | ${bestPractices}% |`,
+                `| ${score(seo)} SEO | ${seo}% |`,
+                `\n`,
+              ].join("\n");
 
             github.rest.issues.createComment({
               issue_number: context.issue.number,
