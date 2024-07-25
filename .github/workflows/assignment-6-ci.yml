@@ -190,7 +190,7 @@ jobs:
                 `| 카테고리 | 점수 |`,
                 `| --- | --- |`,
                 `| ${score(performance)} Performance | ${performance}% |`,
-                `| ${score(accessibility} Accessibility | ${accessibility}% |`,
+                `| ${score(accessibility)} Accessibility | ${accessibility}% |`,
                 `| ${score(bestPractices)} Best practices | ${bestPractices}% |`,
                 `| ${score(seo)} SEO | ${seo}% |`,
                 `\n`,
