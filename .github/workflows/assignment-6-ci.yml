@@ -186,10 +186,10 @@ jobs:
                 `---`,
                 `| 카테고리 | 점수 |`,
                 `| --- | --- |`,
-                `| ${score(Math.round(performance / result.length))} Performance | ${Math.round(performance / result.length)}% |`,
-                `| ${score(Math.round(accessibility / result.length))} Accessibility | ${Math.round(accessibility / result.length)}% |`,
-                `| ${score(Math.round(bestPractices / result.length))} Best practices | ${Math.round(bestPractices / result.length)}% |`,
-                `| ${score(Math.round(seo / result.length))} SEO | ${Math.round(seo / result.length)}% |`,
+                `| ${score(Math.round(performance / results.length))} Performance | ${Math.round(performance / results.length)}% |`,
+                `| ${score(Math.round(accessibility / results.length))} Accessibility | ${Math.round(accessibility / results.length)}% |`,
+                `| ${score(Math.round(bestPractices / results.length))} Best practices | ${Math.round(bestPractices / results.length)}% |`,
+                `| ${score(Math.round(seo / results.length))} SEO | ${Math.round(seo / results.length)}% |`,
                 `\n`,
               ].join("\n");
 
