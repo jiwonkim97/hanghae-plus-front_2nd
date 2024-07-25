@@ -155,6 +155,7 @@ jobs:
           cat packages/assignment-6/lhci_reports/manifest.json
 
       - name: lighthouse test
+        if: success()
         uses: actions/github-script@v6
         with: 
           github-token: ${{ secrets.TOKEN_FOR_CI }}
