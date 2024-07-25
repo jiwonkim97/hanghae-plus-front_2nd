@@ -163,7 +163,6 @@ jobs:
           script: |
             const fs = require('fs');
             const results = JSON.parse(fs.readFileSync("packages/assignment-6/lhci_reports/manifest.json"));
-            let comments = "";
             let [performance, accessibility, bestPractices, seo] = [0, 0, 0, 0, 0]
 
             results.forEach((result,index) => {
@@ -179,8 +178,6 @@ jobs:
               accessibility += summary.accessibility
               bestPractices += summary['best-practices']
               seo += summary.seo
-              
-              comments += comment + "\n";
             });
 
             const score = (res) => (res >= 90 ? "🟢" : res >= 70 ? "🟠" : "🔴");
