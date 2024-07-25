@@ -148,6 +148,7 @@ jobs:
           LHCI_GITHUB_TOKEN: ${{ env.GITHUB_TOKEN }}
         run: |
           pnpm -F assignment-6 lhci
+          
       - name: check reports file
         run: |
           pwd

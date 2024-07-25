@@ -2,7 +2,7 @@ module.exports = {
   ci: {
     collect: {
       startServerCommand: "pnpm -F assignment-6 start",
-      url: ["http://localhost:8080"],
+      url: ["http://localhost:5173"],
       numberOfRuns: 5,
       settings: {
         preset: "desktop",
