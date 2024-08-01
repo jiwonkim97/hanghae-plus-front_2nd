@@ -2,7 +2,7 @@ import { setupServer } from "msw/node";
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from "vitest";
 import { mockApiHandlers } from "../mockApiHandlers";
 import userEvent, { UserEvent } from '@testing-library/user-event'
-import { render, screen, within } from '@testing-library/react'
+import { render, screen, waitFor, waitForElementToBeRemoved, within } from '@testing-library/react'
 import App from "../App";
 
 
@@ -107,14 +107,14 @@ describe('일정 관리 애플리케이션 통합 테스트', () => {
       await user.selectOptions(categorySelect, "업무");
 
       await user.click(submitButton);
-
+      
       // 새로운 이벤트 정상적으로 이벤트 리스트에 추가되었는지 확인합니다.
       const eventList = screen.getByTestId("event-list")
       const newEventInEventList = within(eventList).getByText(title)
       expect(newEventInEventList).toBeInTheDocument()
     });
 
-    test('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영되는지 확인한다', async() => {
+    test.fails('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영되는지 확인한다', async() => {
       render(<App />);
       // const target = screen.getByText("알림 테스트");
     });
