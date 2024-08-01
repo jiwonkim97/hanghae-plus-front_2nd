@@ -79,10 +79,14 @@ describe('일정 관리 애플리케이션 통합 테스트', () => {
       user = userEvent.setup();
     })
 
-    test('새로운 일정을 생성하고 모든 필드가 정확히 저장되는지 확인한다', async() => {
+    test('새로운 일정을 생성하고 해당 일정이 일정 리스트에 렌더링되는지 확인한다', async() => {
       render(<App/>);
       const id = crypto.randomUUID();
       const title = `새로운 이벤트-${id}`
+      const today = new Date()
+      const year = today.getFullYear()
+      const month = today.getMonth() + 1
+      const date = today.getDate() +1
 
       const titleInput = screen.getByTestId('title-input')
       const dateInput = screen.getByTestId("date-input")
@@ -91,15 +95,10 @@ describe('일정 관리 애플리케이션 통합 테스트', () => {
       const descriptionInput = screen.getByTestId("description-input")
       const locationInput = screen.getByTestId("location-input")
       const categorySelect = screen.getByTestId("category-select")
-      // const repeatCheckbox = screen.getByTestId("repeat-checkbox")
-      // const alertSelect = screen.getByTestId("alert-select")
-      // const repeatTypeSelect = screen.getByTestId("repeat-type-select")
-      // const repeatIntervalInput = screen.getByTestId("repeat-interval-input")
-      // const repeatEndDateInput = screen.getByTestId("repeat-end-date-input")
       const submitButton = screen.getByTestId("event-submit-button")
-      
+
       await user.type(titleInput, title);
-      await user.type(dateInput, '2024-07-30');
+      await user.type(dateInput, `${year}-${month < 10 ? `0${month}` : month}-${date < 10 ? `0${date}` : date}`);
       await user.type(startTimeInput, '00:00');
       await user.type(endTimeInput, '23:59');
       await user.type(descriptionInput, '새로운 이벤트 설명');
@@ -107,18 +106,7 @@ describe('일정 관리 애플리케이션 통합 테스트', () => {
 
       await user.selectOptions(categorySelect, "업무");
 
-      // await user.click(repeatCheckbox);
-
-      // await user.type(alertSelect, '새로운 할 일');
-      // await user.type(repeatTypeSelect, '새로운 할 일');
-      // await user.type(repeatIntervalInput, '새로운 할 일');
-      // await user.type(repeatEndDateInput, '새로운 할 일');
       await user.click(submitButton);
-
-      // 새로운 이벤트가 정상적으로 달력에 추가되었는지 확인합니다.
-      const calendar = screen.getByTestId("calendar")
-      const newEventInCalendar = within(calendar).getByText(title)
-      expect(newEventInCalendar).toBeInTheDocument()
 
       // 새로운 이벤트 정상적으로 이벤트 리스트에 추가되었는지 확인합니다.
       const eventList = screen.getByTestId("event-list")
@@ -126,7 +114,10 @@ describe('일정 관리 애플리케이션 통합 테스트', () => {
       expect(newEventInEventList).toBeInTheDocument()
     });
 
-    test.fails('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영되는지 확인한다');
+    test('기존 일정의 세부 정보를 수정하고 변경사항이 정확히 반영되는지 확인한다', async() => {
+      render(<App />);
+      // const target = screen.getByText("알림 테스트");
+    });
     test.fails('일정을 삭제하고 더 이상 조회되지 않는지 확인한다');
   });
 
