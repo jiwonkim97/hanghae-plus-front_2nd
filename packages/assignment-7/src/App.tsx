@@ -410,7 +410,6 @@ function App() {
     })
   })();
 
-
   const renderWeekView = () => {
     const weekDates = getWeekDates(currentDate);
     return (
