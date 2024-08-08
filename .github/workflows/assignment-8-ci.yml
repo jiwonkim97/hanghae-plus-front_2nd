@@ -7,10 +7,8 @@ on:
       - opened
       - reopened
     paths:
-      - 'packages/assignment-8/**'
-
+      - "packages/assignment-8/**"
   workflow_dispatch:
-
 jobs:
   assignment-8-test:
     runs-on: ubuntu-latest
@@ -22,16 +20,17 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: 'pnpm'
+          cache: "pnpm"
       - name: Install dependencies
         run: |
-          pnpm install
+          pnpm install -F assignment-8
           pnpm install cypress -F assignment-8
       - name: assignment-8-basic
         run: |
           pnpm -F assignment-8 test
       - name: assignment-8-advanced(cypress)
         run: |
-          pnpm -F assignment-8 run cy:run
+          pnpm -F assignment-8 run build
+          pnpm -F assignment-8 run start
         env:
           CYPRESS_CACHE_FOLDER: ./cypress-cache
