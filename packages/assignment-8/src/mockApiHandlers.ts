@@ -125,8 +125,8 @@ export const mockApiHandlers = [
     const modifiedEventContents = await request.json() as Omit<Event, "id">
 
     if (eventIndex > -1) {
-      events[eventIndex] = { ...events[eventIndex], ...modifiedEventContents };
-      return HttpResponse.json(events[eventIndex])
+      events = [...events.filter((_, idx) => idx !== eventIndex), { ...events[eventIndex], ...modifiedEventContents }];
+      return HttpResponse.json([...events.filter((_, idx) => idx !== eventIndex), { ...events[eventIndex], ...modifiedEventContents }])
     } else {
       return HttpResponse.json('Event not found', { status: 404 })
     }

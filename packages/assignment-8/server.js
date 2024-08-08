@@ -1,5 +1,4 @@
 import express from 'express';
-import generateRepeatedEvents from './src/utils/generateRepeatedEvents'
 
 const app = express();
 const port = 3000;
@@ -100,7 +99,7 @@ let events = [
 
 // 일정 조회
 app.get('/api/events', (req, res) => {
-  res.json(generateRepeatedEvents(events));
+  res.json(events);
 });
 
 // 일정 추가

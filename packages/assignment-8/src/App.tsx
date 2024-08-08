@@ -204,9 +204,8 @@ function App() {
                 {week.map((day, dayIndex) => {
                   const dateString = day ? formatDate(currentDate, day) : '';
                   const holiday = holidays[dateString];
-
                   return (
-                    <Td key={dayIndex} height="100px" verticalAlign="top" width="14.28%" position="relative">
+                    <Td data-cy={`month-view-cell-${currentDate.getMonth() + 1}-${day}`} key={dayIndex} height="100px" verticalAlign="top" width="14.28%" position="relative">
                       {day && (
                         <>
                           <Text fontWeight="bold">{day}</Text>
@@ -252,12 +251,12 @@ function App() {
 
           <FormControl>
             <FormLabel>제목</FormLabel>
-            <Input value={title} onChange={(e) => setTitle(e.target.value)}/>
+            <Input data-cy='input-title' value={title} onChange={(e) => setTitle(e.target.value)}/>
           </FormControl>
 
           <FormControl>
             <FormLabel>날짜</FormLabel>
-            <Input type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
+            <Input data-cy='input-date' type="date" value={date} onChange={(e) => setDate(e.target.value)}/>
           </FormControl>
 
           <HStack width="100%">
@@ -265,6 +264,7 @@ function App() {
               <FormLabel>시작 시간</FormLabel>
               <Tooltip label={startTimeError} isOpen={!!startTimeError} placement="top">
                 <Input
+                data-cy='input-start-time'
                   type="time"
                   value={startTime}
                   onChange={handleStartTimeChange}
@@ -277,6 +277,7 @@ function App() {
               <FormLabel>종료 시간</FormLabel>
               <Tooltip label={endTimeError} isOpen={!!endTimeError} placement="top">
                 <Input
+                data-cy='input-end-time'
                   type="time"
                   value={endTime}
                   onChange={handleEndTimeChange}
@@ -289,17 +290,17 @@ function App() {
 
           <FormControl>
             <FormLabel>설명</FormLabel>
-            <Input value={description} onChange={(e) => setDescription(e.target.value)}/>
+            <Input data-cy="input-description" value={description} onChange={(e) => setDescription(e.target.value)}/>
           </FormControl>
 
           <FormControl>
             <FormLabel>위치</FormLabel>
-            <Input value={location} onChange={(e) => setLocation(e.target.value)}/>
+            <Input data-cy="input-location" value={location} onChange={(e) => setLocation(e.target.value)}/>
           </FormControl>
 
           <FormControl>
             <FormLabel>카테고리</FormLabel>
-            <Select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <Select data-cy="input-category" value={category} onChange={(e) => setCategory(e.target.value)}>
               <option value="">카테고리 선택</option>
               {categories.map((cat) => (
                 <option key={cat} value={cat}>{cat}</option>
@@ -403,7 +404,7 @@ function App() {
           {filteredEvents.length === 0 ? (
             <Text>검색 결과가 없습니다.</Text>
           ) : filteredEvents.map((event) => (
-            <Box key={`${event.id}-${event.subId}`} data-testid={`event-item-${event.id}`} borderWidth={1} borderRadius="lg" p={3} width="100%">
+            <Box key={`${event.id}-${event.subId}`} data-testid={`event-item-${event.id}-${event.subId}`} borderWidth={1} borderRadius="lg" p={3} width="100%">
               <HStack justifyContent="space-between">
                 <VStack align="start">
                   <HStack>
@@ -432,11 +433,13 @@ function App() {
                 </VStack>
                 <HStack>
                   <IconButton
+                  data-cy="event-edit-button"
                     aria-label="Edit event"
                     icon={<EditIcon/>}
                     onClick={() => editEvent(event)}
                   />
                   <IconButton
+                  data-cy="event-delete-button"
                     aria-label="Delete event"
                     icon={<DeleteIcon/>}
                     onClick={() => deleteEvent(event.id)}
@@ -454,7 +457,7 @@ function App() {
         onClose={() => setIsOverlapDialogOpen(false)}
       >
         <AlertDialogOverlay>
-          <AlertDialogContent>
+          <AlertDialogContent data-cy="alert">
             <AlertDialogHeader fontSize="lg" fontWeight="bold">
               일정 겹침 경고
             </AlertDialogHeader>
@@ -468,7 +471,7 @@ function App() {
             </AlertDialogBody>
 
             <AlertDialogFooter>
-              <Button ref={cancelRef} onClick={() => setIsOverlapDialogOpen(false)}>
+              <Button data-cy="alert-cancel-button" ref={cancelRef} onClick={() => setIsOverlapDialogOpen(false)}>
                 취소
               </Button>
               <Button colorScheme="red" onClick={() => {
