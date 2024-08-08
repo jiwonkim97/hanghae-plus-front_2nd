@@ -156,6 +156,7 @@ function App() {
                     .filter(event => new Date(event.date).toDateString() === date.toDateString())
                     .map(event => {
                       const isNotified = notifiedEvents.includes(event.id);
+                      const isRepeatEvent = event.repeat.type !== 'none' && event.repeat.interval > 0
                       return (
                         <Box
                           key={`${event.id}-${event.subId}`}
@@ -168,7 +169,7 @@ function App() {
                         >
                           <HStack spacing={1}>
                             {isNotified && <BellIcon/>}
-                            <Text fontSize="sm" noOfLines={1}>{event.title}</Text>
+                            <Text fontSize="sm" noOfLines={1}>{isRepeatEvent ? '🔄' : ''}{event.title}</Text>
                           </HStack>
                         </Box>
                       )
@@ -212,6 +213,7 @@ function App() {
                           {holiday && (<Text color="red.500" fontSize="sm">{holiday}</Text>)}
                           {getEventsForDay(filteredEvents, day).map(event => {
                             const isNotified = notifiedEvents.includes(event.id);
+                            const isRepeatEvent = event.repeat.type !== 'none' && event.repeat.interval > 0
                             return (
                               <Box
                                 key={`${event.id}-${event.subId}`}
@@ -224,7 +226,7 @@ function App() {
                               >
                                 <HStack spacing={1}>
                                   {isNotified && <BellIcon/>}
-                                  <Text fontSize="sm" noOfLines={1}>{event.title}</Text>
+                                  <Text fontSize="sm" noOfLines={1}>{isRepeatEvent ? '🔄' : ''}{event.title}</Text>
                                 </HStack>
                               </Box>
                             );

@@ -134,7 +134,7 @@ describe('반복 일정에 대한 테스트', () => {
     });
   });
   describe('반복 일정 표시', () => {
-    test('유형 weekly, 단위 1일 때, 일정이 5회 추가되는지 확인한다.', async () => {
+    test('유형 weekly, 단위 1일 때, 🔄 이모지가 붙은 일정이 캘린더에 5회 추가되는지 확인한다.', async () => {
       vi.setSystemTime(new Date('2024-08-01'));
       render(<App />);
       const title = '이걸 매주 한다고?'
@@ -143,7 +143,7 @@ describe('반복 일정에 대한 테스트', () => {
       await userEvent.clear(screen.getByLabelText(/제목/));
       await userEvent.type(screen.getByLabelText(/제목/), title);
       await userEvent.clear(screen.getByLabelText(/날짜/));
-      await userEvent.type(screen.getByLabelText(/날짜/), '2024-08-08');
+      await userEvent.type(screen.getByLabelText(/날짜/), '2024-08-01');
       await userEvent.type(screen.getByLabelText(/시작 시간/), '09:00');
       await userEvent.type(screen.getByLabelText(/종료 시간/), '10:00');
 
@@ -162,17 +162,14 @@ describe('반복 일정에 대한 테스트', () => {
 
       const repeatIntervalInput = screen.getByLabelText(/반복 간격/);
       await userEvent.clear(repeatIntervalInput);
-      await userEvent.type(repeatIntervalInput, '5');
-      expect(repeatIntervalInput).toHaveValue(5);
+      await userEvent.type(repeatIntervalInput, '1');
+      expect(repeatIntervalInput).toHaveValue(1);
 
       const submitButton = screen.getByTestId('event-submit-button');
       await userEvent.click(submitButton);
       
-      // 캘린더에 5회, 리스트 목록에 5회 노출되어야 함
-      expect(screen.queryAllByText(title).length).toBe(10);
-    });
-    test('유형 weekly, 단위 1일 때, 일정이 반복하여 나타나는지 확인한다.', async () => {
-
+      // 이모지가 추가로 붙은 일정이 캘린더에 5회 노출되어야 함
+      expect(screen.queryAllByText('🔄'+title).length).toBe(5);
     });
   });
 });
