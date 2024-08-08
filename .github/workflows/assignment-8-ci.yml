@@ -21,16 +21,60 @@ jobs:
         with:
           node-version: 20
           cache: "pnpm"
-      - name: Install dependencies
-        run: |
-          pnpm install -F assignment-8
-          pnpm install cypress -F assignment-8
       - name: assignment-8-basic
         run: |
+          pnpm install
           pnpm -F assignment-8 test
-      - name: assignment-8-advanced(cypress)
-        run: |
-          pnpm -F assignment-8 run build
-          pnpm -F assignment-8 run start
+
+  cypress-tests:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '16'
+          cache: 'pnpm'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Build application
+        run: pnpm build
+
+      - name: Start server
+        run: pnpm dev &
         env:
-          CYPRESS_CACHE_FOLDER: ./cypress-cache
+          CI: true
+
+      - name: Wait for server to be ready
+        run: npx wait-on http://localhost:5173
+
+      - name: Run Cypress tests
+        run: pnpm cypress run
+        env:
+          CYPRESS_BASE_URL: http://localhost:5173
+
+      - name: Archive test results
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-results
+          path: cypress/results
+
+      - name: Archive screenshots
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-screenshots
+          path: cypress/screenshots
+
+      - name: Archive videos
+        if: always()
+        uses: actions/upload-artifact@v2
+        with:
+          name: cypress-videos
+          path: cypress/videos
