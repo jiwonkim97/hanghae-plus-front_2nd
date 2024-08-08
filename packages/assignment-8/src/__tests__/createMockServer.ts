@@ -25,8 +25,8 @@ export default function createMockServer(events: Event[]) {
       const updatedEvent = await request.json() as any;
       const index = events.findIndex(event => event.id === Number(id));
       if (index !== -1) {
-        events = [...events.filter((_, idx) => idx !== index), { ...events[index], ...updatedEvent }];
-        return HttpResponse.json([...events.filter((_, idx) => idx !== index), { ...events[index], ...updatedEvent }])
+        events[index] = { ...events[index], ...updatedEvent };
+        return HttpResponse.json(events[index]);
       }
       return new HttpResponse(null, { status: 404 });
     }),
