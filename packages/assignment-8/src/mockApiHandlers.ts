@@ -1,13 +1,19 @@
-import express from 'express';
-import generateRepeatedEvents from './src/utils/generateRepeatedEvents'
+import { http, HttpResponse } from 'msw'
+import { RepeatType } from './types';
 
-const app = express();
-const port = 3000;
-
-app.use(express.json());
-
-// 메모리에 데이터 저장
-let events = [
+type Event = {
+  id: number,
+  title: string,
+  date: string,
+  startTime: string,
+  endTime: string,
+  description: string,
+  location: string,
+  category: string,
+  repeat: { type: RepeatType, interval: number },
+  notificationTime: number,
+}
+let events: Array<Event> = [
   {
     id: 1,
     title: "팀 회의",
@@ -81,11 +87,11 @@ let events = [
       const startTime = new Date(now.getTime() + 5 * 60000); // 5분 후
       const endTime = new Date(startTime.getTime() + 60 * 60000); // 시작시간으로부터 1시간 후
 
-      const formatDate = (date) => {
+      const formatDate = (date: Date) => {
         return date.toISOString().split('T')[0];
       };
 
-      const formatTime = (date) => {
+      const formatTime = (date: Date) => {
         return date.toTimeString().split(' ')[0].substring(0, 5);
       };
 
@@ -98,41 +104,38 @@ let events = [
   }
 ];
 
-// 일정 조회
-app.get('/api/events', (req, res) => {
-  res.json(generateRepeatedEvents(events));
-});
+export const mockApiHandlers = [
+  http.get('/api/events', () => {
+    // const ret = generateRepeatedEvents(events)
 
-// 일정 추가
-app.post('/api/events', (req, res) => {
-  const newEvent = {
-    id: Date.now(),
-    ...req.body
-  };
-  events.push(newEvent);
-  res.status(201).json(newEvent);
-});
+    return HttpResponse.json(events)
+  }),
 
-// 일정 수정
-app.put('/api/events/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  const eventIndex = events.findIndex(event => event.id === id);
-  if (eventIndex > -1) {
-    events[eventIndex] = { ...events[eventIndex], ...req.body };
-    res.json(events[eventIndex]);
-  } else {
-    res.status(404).send('Event not found');
-  }
-});
+  http.post('/api/events', async ({ request }) => {
+    const newEventContents = await request.json() as Omit<Event, "id">
+    const newEvent = { id: events.length + 1, ...newEventContents }
+    events.push(newEvent)
+    
+    return HttpResponse.json(newEvent, { status: 201 })
+  }),
 
-// 일정 삭제
-app.delete('/api/events/:id', (req, res) => {
-  const id = parseInt(req.params.id);
-  events = events.filter(event => event.id !== id);
-  res.status(204).send();
-});
+  http.put('/todos/:id', async ({ params, request }) => {
+    const { id } = params
+    const eventIndex = events.findIndex(event => event.id === Number(id))
+    const modifiedEventContents = await request.json() as Omit<Event, "id">
 
-// 서버 시작
-app.listen(port, () => {
-  console.log(`Server running at http://localhost:${port}`);
-});
+    if (eventIndex > -1) {
+      events[eventIndex] = { ...events[eventIndex], ...modifiedEventContents };
+      return HttpResponse.json(events[eventIndex])
+    } else {
+      return HttpResponse.json('Event not found', { status: 404 })
+    }
+  }),
+
+  http.delete('/api/events/:id', ({ params }) => {
+    const { id } = params
+    events = events.filter(event => event.id !== Number(id));
+
+    return new HttpResponse(null, { status: 204 })
+  }),
+]

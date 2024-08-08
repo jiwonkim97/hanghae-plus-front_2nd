@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   Alert,
   AlertDialog,
@@ -76,7 +76,7 @@ function App() {
     editEvent,
   } = useEventForm();
 
-  const { events, saveEvent, deleteEvent } = useEventOperations(Boolean(editingEvent), () => setEditingEvent(null));
+  const { events, fetchEvents, saveEvent, deleteEvent } = useEventOperations(Boolean(editingEvent), () => setEditingEvent(null));
   const { notifications, notifiedEvents, setNotifications } = useNotifications(events);
   const { view, setView, currentDate, holidays, navigate } = useCalendarView();
   const { searchTerm, filteredEvents, setSearchTerm }  = useSearch(events, currentDate, view);
@@ -108,6 +108,7 @@ function App() {
       return;
     }
 
+    
     const eventData: Event = {
       id: editingEvent ? editingEvent.id : Date.now(),
       title, date, startTime, endTime, description, location, category,
@@ -128,6 +129,10 @@ function App() {
       resetForm();
     }
   };
+
+  useEffect(() => {
+    fetchEvents()
+  }, [currentDate])
 
   const renderWeekView = () => {
     const weekDates = getWeekDates(currentDate);
@@ -153,7 +158,7 @@ function App() {
                       const isNotified = notifiedEvents.includes(event.id);
                       return (
                         <Box
-                          key={event.id}
+                          key={`${event.id}-${event.subId}`}
                           p={1}
                           my={1}
                           bg={isNotified ? "red.100" : "gray.100"}
@@ -209,7 +214,7 @@ function App() {
                             const isNotified = notifiedEvents.includes(event.id);
                             return (
                               <Box
-                                key={event.id}
+                                key={`${event.id}-${event.subId}`}
                                 p={1}
                                 my={1}
                                 bg={isNotified ? "red.100" : "gray.100"}
@@ -302,7 +307,7 @@ function App() {
 
           <FormControl>
             <FormLabel>반복 설정</FormLabel>
-            <Checkbox isChecked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)}>
+            <Checkbox role="repeatCheckbox" isChecked={isRepeating} onChange={(e) => setIsRepeating(e.target.checked)}>
               반복 일정
             </Checkbox>
           </FormControl>
@@ -396,7 +401,7 @@ function App() {
           {filteredEvents.length === 0 ? (
             <Text>검색 결과가 없습니다.</Text>
           ) : filteredEvents.map((event) => (
-            <Box key={event.id} borderWidth={1} borderRadius="lg" p={3} width="100%">
+            <Box key={`${event.id}-${event.subId}`} data-testid={`event-item-${event.id}`} borderWidth={1} borderRadius="lg" p={3} width="100%">
               <HStack justifyContent="space-between">
                 <VStack align="start">
                   <HStack>
@@ -455,7 +460,7 @@ function App() {
             <AlertDialogBody>
               다음 일정과 겹칩니다:
               {overlappingEvents.map(event => (
-                <Text key={event.id}>{event.title} ({event.date} {event.startTime}-{event.endTime})</Text>
+                <Text key={`${event.id}-${event.subId}`}>{event.title} ({event.date} {event.startTime}-{event.endTime})</Text>
               ))}
               계속 진행하시겠습니까?
             </AlertDialogBody>
