@@ -1,5 +1,4 @@
 name: CI Assignment 8
-
 on:
   pull_request:
     types:
@@ -25,18 +24,21 @@ jobs:
         run: |
           pnpm install
           pnpm -F assignment-8 test
-
   cypress-run:
-    runs-on: ubuntu-22.04
-    container:
-      image: cypress/browsers:node-20.14.0-chrome-126.0.6478.114-1-ff-127.0.1-edge-126.0.2592.61-1
-      options: --user 1001
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Install pnpm
+        run: |
+          npm install -g pnpm@9
+          pnpm install
       - name: Cypress run
         uses: cypress-io/github-action@v6
         with:
-          build: npm run build
-          start: npm start
+          install: false
+          working-directory: packages/assignment-8
+          start: pnpm run dev
+          wait-on: "http://localhost:5173"
+          run: pnpm run cy:run
           browser: chrome
