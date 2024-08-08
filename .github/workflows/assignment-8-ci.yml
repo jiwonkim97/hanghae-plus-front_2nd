@@ -23,7 +23,15 @@ jobs:
         with:
           node-version: 20
           cache: 'pnpm'
-      - name: assignment-8-basic
+      - name: Install dependencies
         run: |
           pnpm install
+          pnpm install cypress -F assignment-8
+      - name: assignment-8-basic
+        run: |
           pnpm -F assignment-8 test
+      - name: assignment-8-advanced(cypress)
+        run: |
+          pnpm -F assignment-8 run cy:run
+        env:
+          CYPRESS_CACHE_FOLDER: ./cypress-cache
