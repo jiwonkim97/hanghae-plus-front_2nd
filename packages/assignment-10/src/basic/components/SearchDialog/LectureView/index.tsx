@@ -1,27 +1,33 @@
-import { Button, Table, Tbody, Td, Tr } from "@chakra-ui/react"
+import { Table, Tbody } from "@chakra-ui/react"
 import { Lecture } from "../../../types"
+import LectureItem from "./LectureItem";
+import { useEffect, useState } from "react";
+import { PAGE_SIZE } from "../../../constants";
 
 interface Props {
-  visibleLectures: Lecture[];
-  addSchedule: (lecture: Lecture) => void
+  filteredLectures: Lecture[];
+  addSchedule: (lecture: Lecture) => void;
+  page: number;
 }
 
-const LectureView = ({visibleLectures, addSchedule}:Props) => {
+const LectureView = ({filteredLectures, addSchedule, page}:Props) => {
+  const [visibleLectures, setVisiblsLectures] = useState<Lecture[]>([])
+
+  useEffect(() => {
+    if(page === 1){
+      setVisiblsLectures(filteredLectures.slice(0, PAGE_SIZE))
+    }else{
+      const newLectures = filteredLectures.slice(PAGE_SIZE * (page - 1), PAGE_SIZE * page)
+      setVisiblsLectures(cur => [...cur, ...newLectures])
+    }
+  }, [filteredLectures, page])
+
+
   return(
     <Table size="sm" variant="striped">
       <Tbody>
         {visibleLectures.map((lecture, index) => (
-          <Tr key={`${lecture.id}-${index}`}>
-            <Td width="100px">{lecture.id}</Td>
-            <Td width="50px">{lecture.grade}</Td>
-            <Td width="200px">{lecture.title}</Td>
-            <Td width="50px">{lecture.credits}</Td>
-            <Td width="150px" dangerouslySetInnerHTML={{ __html: lecture.major }}/>
-            <Td width="150px" dangerouslySetInnerHTML={{ __html: lecture.schedule }}/>
-            <Td width="80px">
-              <Button size="sm" colorScheme="green" onClick={() => addSchedule(lecture)}>추가</Button>
-            </Td>
-          </Tr>
+          <LectureItem key={`${lecture.id}-${index}`} lecture={lecture} addSchedule={addSchedule}/>
         ))}
       </Tbody>
     </Table>

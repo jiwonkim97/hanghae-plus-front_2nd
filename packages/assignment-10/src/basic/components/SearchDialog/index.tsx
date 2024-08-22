@@ -79,7 +79,6 @@ const SearchDialog = ({ searchInfo, onClose }: Props) => {
   }, [lectures, searchOptions])
 
   const lastPage = useMemo(() => Math.ceil(filteredLectures.length / PAGE_SIZE), [filteredLectures]);
-  const visibleLectures = useMemo(() => filteredLectures.slice(0, page * PAGE_SIZE), [filteredLectures, page]);
   const allMajors = useMemo(() => [...new Set(lectures.map(lecture => lecture.major))], [lectures]);
 
   const changeSearchOption = useCallback((field: keyof SearchOption, value: SearchOption[typeof field]) => {
@@ -182,7 +181,7 @@ const SearchDialog = ({ searchInfo, onClose }: Props) => {
               </Table>
 
               <Box overflowY="auto" maxH="500px" ref={loaderWrapperRef}>
-                <LectureView visibleLectures={visibleLectures} addSchedule={addSchedule}/>
+                <LectureView filteredLectures={filteredLectures} addSchedule={addSchedule} page={page}/>
                 <Box ref={loaderRef} h="20px"/>
               </Box>
             </Box>
