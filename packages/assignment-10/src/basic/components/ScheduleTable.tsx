@@ -12,12 +12,13 @@ import {
   PopoverTrigger,
   Text,
 } from '@chakra-ui/react';
-import { CellSize, DAY_LABELS, 분 } from "../constants.ts";
+import { CellSize, DAY_LABELS, TIMES } from "../constants.ts";
 import { Schedule } from "../types.ts";
-import { fill2, parseHnM } from "../utils.ts";
-import { useDndContext, useDraggable } from "@dnd-kit/core";
+import { fill2 } from "../utils.ts";
+import { useDraggable } from "@dnd-kit/core";
 import { CSS } from '@dnd-kit/utilities';
-import { ComponentProps, Fragment } from "react";
+import { ComponentProps, Fragment, useCallback, useMemo } from "react";
+import useActiveId from '../hooks/useActiveId.ts';
 
 interface Props {
   tableId: string;
@@ -26,37 +27,20 @@ interface Props {
   onDeleteButtonClick?: (timeInfo: { day: string, time: number }) => void;
 }
 
-const TIMES = [
-  ...Array(18)
-    .fill(0)
-    .map((v, k) => v + k * 30 * 분)
-    .map((v) => `${parseHnM(v)}~${parseHnM(v + 30 * 분)}`),
-
-  ...Array(6)
-    .fill(18 * 30 * 분)
-    .map((v, k) => v + k * 55 * 분)
-    .map((v) => `${parseHnM(v)}~${parseHnM(v + 50 * 분)}`),
-] as const;
-
 const ScheduleTable = ({ tableId, schedules, onScheduleTimeClick, onDeleteButtonClick }: Props) => {
-
-  const getColor = (lectureId: string): string => {
+  const activeId = useActiveId()
+  const getColor = useCallback((lectureId: string): string => {
     const lectures = [...new Set(schedules.map(({ lecture }) => lecture.id))];
     const colors = ["#fdd", "#ffd", "#dff", "#ddf", "#fdf", "#dfd"];
     return colors[lectures.indexOf(lectureId) % colors.length];
-  };
+  }, [schedules]);
 
-  const dndContext = useDndContext();
-
-  const getActiveTableId = () => {
-    const activeId = dndContext.active?.id;
+  const activeTableId = useMemo(() => {
     if (activeId) {
       return String(activeId).split(":")[0];
     }
     return null;
-  }
-
-  const activeTableId = getActiveTableId();
+  }, [activeId])
 
   return (
     <Box
