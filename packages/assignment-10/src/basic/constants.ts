@@ -8,6 +8,8 @@ export const CellSize = {
 export const 초 = 1000;
 export const 분 = 60 * 초;
 
+export const PAGE_SIZE = 100;
+
 export const TIME_SLOTS = [
   { id: 1, label: "09:00~09:30" },
   { id: 2, label: "09:30~10:00" },
