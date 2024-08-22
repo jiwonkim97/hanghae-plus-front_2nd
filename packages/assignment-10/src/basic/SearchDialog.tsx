@@ -87,6 +87,7 @@ const fetchLiberalArts = () => axios.get<Lecture[]>('/schedules-liberal-arts.jso
 
 // TODO: 이 코드를 개선해서 API 호출을 최소화 해보세요 + Promise.all이 현재 잘못 사용되고 있습니다. 같이 개선해주세요.
 const fetchAllLectures = async () => {
+  // 클로저를 이용한 API 호출 여부 캐시
   let hasFetchedMajors = false;
   let hasFetchedLiberalArts = false;
 
@@ -95,8 +96,7 @@ const fetchAllLectures = async () => {
       return
     }
     hasFetchedMajors = true;
-    const res = fetchMajors()
-    return res
+    return fetchMajors()
   }
 
   const cachedFetchLiberalArts = async() => {
