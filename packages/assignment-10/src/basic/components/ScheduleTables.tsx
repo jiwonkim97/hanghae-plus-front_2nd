@@ -53,12 +53,13 @@ const ScheduleTableContent = ({
   }, [schedules, updateSchedule])
 
   useEffect(() => {
-    window.addEventListener(customEventKey.addSchedule, addSchedule)
+    const key = customEventKey.addSchedule + tableId
+    window.addEventListener(key, addSchedule)
 
     return () => {
-      window.removeEventListener(customEventKey.addSchedule, addSchedule)
+      window.removeEventListener(key, addSchedule)
     }
-  }, [addSchedule])
+  }, [addSchedule, tableId])
 
   return (
     <Stack key={tableId} width='600px'>

@@ -15,7 +15,6 @@ import {
   Tr,
   VStack,
 } from '@chakra-ui/react';
-import { useScheduleContext } from '../../ScheduleContext.tsx';
 import { Lecture, SearchOption } from '../../types.ts';
 import { parseSchedule } from "../../utils.ts";
 import TimeView from './TimeView/index.tsx';
@@ -96,13 +95,9 @@ const SearchDialog = ({ searchInfo, onClose }: Props) => {
       lecture
     }));
 
-    const event = new CustomEvent(customEventKey.addSchedule, {detail: schedules});
+    const eventKey = customEventKey.addSchedule + tableId
+    const event = new CustomEvent(eventKey, {detail: schedules});
     window.dispatchEvent(event)
-    // setSchedulesMap(prev => ({
-    //   ...prev,
-    //   [tableId]: [...prev[tableId], ...schedules]
-    // }));
-
     onClose();
   }, [searchInfo, onClose]);
 
