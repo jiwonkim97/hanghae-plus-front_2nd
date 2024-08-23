@@ -1,10 +1,12 @@
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { Button, ButtonGroup, Flex, Heading, Stack } from '@chakra-ui/react';
 import ScheduleTable from './ScheduleTable';
 import SearchDialog from './SearchDialog';
 import { useScheduleContext } from '../ScheduleContext';
 import { TableProvider, useTableContext } from '../TableContext';
 import ScheduleDndProvider from '../ScheduleDndProvider';
+import { Schedule } from '../types';
+import { customEventKey } from '../constants';
 
 interface ScheduleTableWrapperProps {
   tableId: string;
@@ -30,18 +32,33 @@ const ScheduleTableContent = ({
   );
 
   const handleDeleteButtonClick = useCallback(
-    ({ day, time }: { day: string; time: number }) => {
+    ({ day, id }: { day: string; id: string }) => {
       const updatedSchedules = schedules.filter(
-        (schedule) => schedule.day !== day || !schedule.range.includes(time)
+        (schedule) => schedule.lecture.id !== id || schedule.day !== day
       );
       updateSchedule(updatedSchedules);
     },
     [schedules, updateSchedule]
   );
 
-  const duplicate = (tableId: string) => {
+  const handleDuplicateButtonClick = () => {
     addTable(tableId)
   }
+  
+  const addSchedule = useCallback((event: Event) => {
+    const newSchedules = event as CustomEvent<Schedule[] | null>
+    if(newSchedules !== null && newSchedules.detail !== null){
+      updateSchedule([...schedules, ...newSchedules.detail])
+    }
+  }, [schedules, updateSchedule])
+
+  useEffect(() => {
+    window.addEventListener(customEventKey.addSchedule, addSchedule)
+
+    return () => {
+      window.removeEventListener(customEventKey.addSchedule, addSchedule)
+    }
+  }, [addSchedule])
 
   return (
     <Stack key={tableId} width='600px'>
@@ -56,7 +73,7 @@ const ScheduleTableContent = ({
           >
             시간표 추가
           </Button>
-          <Button colorScheme="green" mx="1px" onClick={() => duplicate(tableId)}>복제</Button>
+          <Button colorScheme="green" mx="1px" onClick={handleDuplicateButtonClick}>복제</Button>
           <Button colorScheme='green' onClick={() => removeTable(tableId)}>
             삭제
           </Button>

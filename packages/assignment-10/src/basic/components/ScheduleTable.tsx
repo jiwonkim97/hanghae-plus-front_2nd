@@ -24,7 +24,7 @@ interface Props {
   tableId: string;
   schedules: Schedule[];
   onScheduleTimeClick?: (timeInfo: { day: string, time: number }) => void;
-  onDeleteButtonClick?: (timeInfo: { day: string, time: number }) => void;
+  onDeleteButtonClick?: (timeInfo: { day: string, id: string }) => void;
 }
 
 const ScheduleTable = memo(({ tableId, schedules, onScheduleTimeClick, onDeleteButtonClick }: Props) => {
@@ -58,7 +58,7 @@ const ScheduleTable = memo(({ tableId, schedules, onScheduleTimeClick, onDeleteB
           bg={getColor(schedule.lecture.id)}
           onDeleteButtonClick={() => onDeleteButtonClick?.({
             day: schedule.day,
-            time: schedule.range[0],
+            id: schedule.lecture.id
           })}
         />
       ))}

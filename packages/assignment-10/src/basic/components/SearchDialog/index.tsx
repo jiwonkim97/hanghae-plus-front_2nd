@@ -23,7 +23,7 @@ import MajorView from './MajorView/index.tsx';
 import Forms from './Forms/index.tsx';
 import LectureView from './LectureView/index.tsx';
 import { fetchAllLectures } from '../../utils/fetchAllLectures.ts';
-import { PAGE_SIZE } from '../../constants.ts';
+import { customEventKey, PAGE_SIZE } from '../../constants.ts';
 
 interface Props {
   searchInfo: {
@@ -36,7 +36,6 @@ interface Props {
 
 // TODO: 이 컴포넌트에서 불필요한 연산이 발생하지 않도록 다양한 방식으로 시도해주세요.
 const SearchDialog = ({ searchInfo, onClose }: Props) => {
-  const { setSchedulesMap } = useScheduleContext();
 
   const loaderRef = useRef<HTMLDivElement>(null);
   const loaderWrapperRef = useRef<HTMLDivElement>(null);
@@ -97,13 +96,15 @@ const SearchDialog = ({ searchInfo, onClose }: Props) => {
       lecture
     }));
 
-    setSchedulesMap(prev => ({
-      ...prev,
-      [tableId]: [...prev[tableId], ...schedules]
-    }));
+    const event = new CustomEvent(customEventKey.addSchedule, {detail: schedules});
+    window.dispatchEvent(event)
+    // setSchedulesMap(prev => ({
+    //   ...prev,
+    //   [tableId]: [...prev[tableId], ...schedules]
+    // }));
 
     onClose();
-  }, [searchInfo, onClose, setSchedulesMap]);
+  }, [searchInfo, onClose]);
 
   useEffect(() => {
     const $loader = loaderRef.current;
