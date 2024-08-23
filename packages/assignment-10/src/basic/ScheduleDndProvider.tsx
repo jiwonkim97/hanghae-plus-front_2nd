@@ -40,7 +40,6 @@ export default function ScheduleDndProvider({ children }: PropsWithChildren) {
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const handleDragEnd = useCallback(
     (event: DragEndEvent) => {
-      console.log('hello');
       const { active, delta } = event;
       const { x, y } = delta;
       const [draggedTableId, index] = (active.id as string).split(':');
