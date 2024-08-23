@@ -19,7 +19,7 @@ const ScheduleTableContent = ({
   index,
   setSearchInfo,
 }: ScheduleTableWrapperProps) => {
-  const { removeTable } = useScheduleContext();
+  const { removeTable, addTable } = useScheduleContext();
   const { schedules, updateSchedule } = useTableContext();
 
   const handleScheduleTimeClick = useCallback(
@@ -39,6 +39,10 @@ const ScheduleTableContent = ({
     [schedules, updateSchedule]
   );
 
+  const duplicate = (tableId: string) => {
+    addTable(tableId)
+  }
+
   return (
     <Stack key={tableId} width='600px'>
       <Flex justifyContent='space-between' alignItems='center'>
@@ -52,6 +56,7 @@ const ScheduleTableContent = ({
           >
             시간표 추가
           </Button>
+          <Button colorScheme="green" mx="1px" onClick={() => duplicate(tableId)}>복제</Button>
           <Button colorScheme='green' onClick={() => removeTable(tableId)}>
             삭제
           </Button>
@@ -99,7 +104,7 @@ export const ScheduleTables = () => {
   
   return (
     <>
-          <Flex w='full' gap={6} p={6} flexWrap='wrap'>
+      <Flex w='full' gap={6} p={6} flexWrap='wrap'>
         {tableIds.map((tableId, index) => (
           <ScheduleTableWrapper
             key={tableId}
