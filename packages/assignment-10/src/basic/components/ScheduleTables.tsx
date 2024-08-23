@@ -21,7 +21,7 @@ const ScheduleTableContent = ({
   index,
   setSearchInfo,
 }: ScheduleTableWrapperProps) => {
-  const { removeTable, addTable } = useScheduleContext();
+  const { removeTable, addTable, tableIds } = useScheduleContext();
   const { schedules, updateSchedule } = useTableContext();
 
   const handleScheduleTimeClick = useCallback(
@@ -42,7 +42,16 @@ const ScheduleTableContent = ({
   );
 
   const handleDuplicateButtonClick = () => {
-    addTable(tableId)
+    const id = `schedule-${tableIds.length + 1}`
+    addTable(id)
+    
+    const eventKey = customEventKey.addSchedule + id
+    const event = new CustomEvent(eventKey, {detail: schedules});
+
+    // 태스트 큐로 이벤트를 발생시켜 다음 스케쥴의 생성보다 실행시기를 늦춘다
+    setTimeout(() => {
+      window.dispatchEvent(event)
+    }, 0)
   }
   
   const addSchedule = useCallback((event: Event) => {
